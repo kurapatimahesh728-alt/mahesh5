@@ -1,0 +1,68 @@
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class Main extends Application {
+
+    @Override
+    public void start(Stage stage) {
+        Label title = new Label("Tip Calculator");
+
+        TextField billField = new TextField();
+        billField.setPromptText("Enter Bill Amount");
+
+        TextField tipField = new TextField();
+        tipField.setPromptText("Enter Tip Percentage");
+
+        Button calculate = new Button("Calculate Tip");
+        Button reset = new Button("Reset");
+
+        Label result = new Label();
+        Label error = new Label();
+
+        calculate.setOnAction(e -> {
+            try {
+                double bill = Double.parseDouble(billField.getText());
+                double percentage = Double.parseDouble(tipField.getText());
+
+                if (bill < 0 || percentage < 0) {
+                    throw new NumberFormatException();
+                }
+
+                double tip = bill * percentage / 100;
+                result.setText(String.format("Tip Amount: $%.2f", tip));
+                error.setText("");
+
+            } catch (NumberFormatException ex) {
+                result.setText("");
+                error.setText("Error: Please enter valid numbers.");
+            }
+        });
+
+        reset.setOnAction(e -> {
+            billField.clear();
+            tipField.clear();
+            result.setText("");
+            error.setText("");
+        });
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(
+            title, billField, tipField,
+            calculate, reset, result, error
+        );
+
+        Scene scene = new Scene(root, 350, 300);
+
+        stage.setTitle("Tip Calculator");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
